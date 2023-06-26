@@ -1,1 +1,28 @@
-hello world
+<html>
+<head>
+
+</head>
+	<body>
+		<div>
+			Unix time: <span id="unixTime"></span>
+		</div>
+	</body>
+
+	<script>
+
+		var then = new Date(0);
+		var now = new Date(Date.now());
+		var diff = Date(now-then);
+		var yearDiff = now.getFullYear() - then.getFullYear();
+		var monthDiff = now.getMonth() - then.getMonth();
+		var dayDiff = now.getDate() - then.getDate();
+		var hourDiff = now.getHours() - then.getHours();
+		var minuteDiff = now.getMinutes() - then.getMinutes();
+		var secondDiff = now.getSeconds() - then.getSeconds();
+		document.getElementById("unixTime").innerHTML =
+			"Years: " + yearDiff + ", Months: " + monthDiff + 
+			", Days: " + dayDiff + ", Hours: " + hourDiff + 
+			", Minutes: " + minuteDiff + ", Seconds: " + secondDiff;
+
+	</script>
+</html>
