@@ -4,7 +4,7 @@
 </head>
 	<body onload="setInterval(unixTime,1000)">
 		<div>
-			Unix time: <span id="unixTime"></span>
+			Unix Epoch: <span id="unixTime"></span>
 		</div>
 	</body>
 
@@ -15,11 +15,11 @@
 			var now = new Date(Date.now());
 			var diff = Date(now-then);
 			var yearDiff = now.getFullYear() - then.getFullYear();
-			var monthDiff = now.getMonth() - then.getMonth();
-			var dayDiff = now.getDate() - then.getDate();
-			var hourDiff = now.getHours() - then.getHours();
-			var minuteDiff = now.getMinutes() - then.getMinutes();
-			var secondDiff = now.getSeconds() - then.getSeconds();
+			var monthDiff = now.getUTCMonth() - then.getUTCMonth();
+			var dayDiff = now.getUTCDate() - then.getUTCDate();
+			var hourDiff = now.getUTCHours() - then.getUTCHours();
+			var minuteDiff = now.getUTCMinutes() - then.getUTCMinutes();
+			var secondDiff = now.getUTCSeconds() - then.getUTCSeconds();
 			document.getElementById("unixTime").innerHTML =
 				"Years: " + yearDiff + ", Months: " + monthDiff + 
 				", Days: " + dayDiff + ", Hours: " + hourDiff + 
