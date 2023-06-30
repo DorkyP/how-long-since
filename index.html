@@ -4,26 +4,64 @@
 </head>
 	<body onload="setInterval(unixTime,1000)">
 		<div>
-			Unix Epoch: <span id="unixTime"></span>
+			<span id="unixTimeLabel">
+				Unix Epoch:
+			</span>
+			<span id="unixTimeSimple"></span>
+			<span id="unixTimeFull"></span>
 		</div>
 	</body>
 
 	<script>
 		function unixTime() {
-			// Note: Wrong by timezone offset
 			var then = new Date(0);
 			var now = new Date(Date.now());
-			var diff = Date(now-then);
+			
 			var yearDiff = now.getFullYear() - then.getFullYear();
 			var monthDiff = now.getUTCMonth() - then.getUTCMonth();
 			var dayDiff = now.getUTCDate() - then.getUTCDate();
 			var hourDiff = now.getUTCHours() - then.getUTCHours();
 			var minuteDiff = now.getUTCMinutes() - then.getUTCMinutes();
 			var secondDiff = now.getUTCSeconds() - then.getUTCSeconds();
-			document.getElementById("unixTime").innerHTML =
-				"Years: " + yearDiff + ", Months: " + monthDiff + 
-				", Days: " + dayDiff + ", Hours: " + hourDiff + 
-				", Minutes: " + minuteDiff + ", Seconds: " + secondDiff;
+
+			// Figure out full string
+			document.getElementById("unixTimeFull").innerHTML =
+				yearDiff + " years, " + monthDiff + " months, " + dayDiff + " days, " + hourDiff + " hours, " + minuteDiff + " minutes, " + secondDiff + " seconds.";
+
+			// Figure out simple string - basically get first value that isn't zero, round it.
+			if (yearDiff != 0) {
+				if (monthDiff >= 6) {
+					document.getElementById("unixTimeSimple").innerHTML = "Almost " + (yearDiff+1) + " years"
+				} else {
+					document.getElementById("unixTimeSimple").innerHTML = "Over " + yearDiff + " years"
+				}
+			} else if (monthDiff != 0) {
+				if (dayDiff > 15) {
+					document.getElementById("unixTimeSimple").innerHTML = "Almost " + (monthDiff+1) + " months"
+				} else {
+					document.getElementById("unixTimeSimple").innerHTML = "Over " + monthDiff + " years"
+				}
+			} else if (dayDiff != 0) {
+				if (hourDiff > 12) {
+					document.getElementById("unixTimeSimple").innerHTML = "Almost " + (dayDiff+1) + " days"
+				} else {
+					document.getElementById("unixTimeSimple").innerHTML = "Over " + dayDiff + " days"
+				}
+			} else if (hourDiff != 0) {
+				if (minuteDiff > 30) {
+					document.getElementById("unixTimeSimple").innerHTML = "Almost " + (hourDiff+1) + " hours"
+				} else {
+					document.getElementById("unixTimeSimple").innerHTML = "Over " + hourDiff + " hours"
+				}
+			} else if (minuteDiff != 0) {
+				if (secondDiff > 30) {
+					document.getElementById("unixTimeSimple").innerHTML = "Almost " + (minuteDiff+1) + " minutes"
+				} else {
+					document.getElementById("unixTimeSimple").innerHTML = "Over " + minuteDiff + " minutes"
+				}
+			} else {
+				document.getElementById("unixTimeSimple").innerHTML = "Over " + secondDiff + " seconds"
+			}
 		}
 	</script>
 </html>
