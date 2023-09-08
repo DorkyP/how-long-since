@@ -5,6 +5,10 @@
 	<body onload="setInterval(update,50)">
 		Have won a Grand Final
 		<ul>
+			<li id="adelaide" value="1998-09-26T16:30:00+10:00" name="Adelaide" class="timeSince"></li>
+			<li id="brisbane" value="2003-09-27T16:40:00+10:00" name="Brisbane" class="timeSince"></li>
+			<li id="carlton" value="1995-09-30T15:00:00+10:00" name="Carlton" class="timeSince"></li>
+			<li id="collingwood" value="2010-10-02T16:30:00+10:00" name="Collingwood" class="timeSince"></li>
 			<li id="essendon" value="2000-09-02T15:00:00+10:00" name="Essendon" class="timeSince"></li>
 		</ul>
 		<div>
@@ -36,26 +40,28 @@
 			var yearDiff = Math.floor(diff/31556952000);
 
 			// Figure out which whole months have elapsed from then -> now.
-			var monthDiff = 0;
-			if (now.getUTCMonth() > (then.getUTCMonth()+1)) { // Month is in the past
-				monthDiff = now.getUTCMonth() - then.getUTCMonth();
-			} else { // Month is in the future
-				monthDiff = (12 - then.getUTCMonth() + now.getUTCMonth()) % 12;
-				if (now.getUTCDate() < then.getUTCDate()) {
-					monthDiff -= 1;
-				}
-			}
-
-			// Day diff = number of days from origin to end of month + current date of month
 			var dayDiff = 0;
+			var monthDiff = 0;
+			var thenDate = then.getUTCDate();
+			var nowDate = now.getUTCDate();
+			var thenMonth = then.getUTCMonth();
+			var nowMonth = now.getUTCMonth();
 			// If current date is higher than then date, just do current-then
 			// Else do number of days from origin to end of month + current date of month
-			var thenDate = then.getDate();
-			var nowDate = now.getDate();
-			if(nowDate >= thenDate) {
-				dayDiff = nowDate-thenDate-1;
-			} else {
-				dayDiff = (months[then.getMonth()]-thenDate) + nowDate;
+
+			if (nowMonth >= thenMonth) { // Month is in the past
+				monthDiff = nowMonth - thenMonth;
+				if(nowDate >= thenDate) {
+					dayDiff = nowDate-thenDate-1;
+				} else {
+					dayDiff = (months[thenMonth]-thenDate) + nowDate;
+				}
+			} else { // Month is in the future
+				monthDiff = (12 - thenMonth + nowMonth) % 12;
+				if (nowDate < thenDate) {
+					monthDiff -= 1;
+				}
+				dayDiff = thenDate +  (months[nowMonth]-nowDate)
 			}
 
 			var simple = "";
