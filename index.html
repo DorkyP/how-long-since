@@ -1,35 +1,68 @@
 <html>
 <head>
-
+	<title>How long since...?</title>
 </head>
-	<body onload="setInterval(unixTime,50)">
+	<body onload="setInterval(update,50)">
 		<div>
-			<div id="unixTime" value="1970-01-01T00:00:00+00:00" name="Unix Epoch"></div>
+			<div id="unixTime" value="1970-01-01T00:00:00+00:00" name="Unix Epoch" class="timeSince"></div>
 		</div>
 	</body>
 
 	<script>
 		// YYYY-MM-DDTHH:mm:ss+HH:mm
-		function unixTime() {
-			var time = document.getElementById("unixTime").getAttribute("value");
+		function update() {
+			var el = [...document.getElementsByClassName("timeSince")];
+
+			for (var i = 0; i < el.length; i++) updateElement(el[i]);
+		}
+
+		function updateElement(element) {
+			var months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+			var time = element.getAttribute("value");
+			var title = element.getAttribute("name");
+
 			var then = new Date(time);
 			var now = new Date(Date.now());
 
+			var diff = new Date(now - then); // in milliseconds
+
+			// Getting seconds, minutes, hours and years is simples, since that's constant, so calculate it here. Getting months and days is harder since there's a different number of days in each month
+			var secondDiff = Math.floor(diff/1000) % 60;
+			var minuteDiff = Math.floor(diff/60000) % 60;
+			var hourDiff = Math.floor(diff/3600000) % 24;
+			var yearDiff = Math.floor(diff/31556952000);
+
+			// Figure out which whole months have elapsed from then -> now.
+			var monthDiff = 0;
+			if (now.getUTCMonth() > (then.getUTCMonth()+1)) { // Month is in the past
+				monthDiff = now.getUTCMonth() - then.getUTCMonth();
+			} else { // Month is in the future
+				monthDiff = (12 - then.getUTCMonth() + now.getUTCMonth()) % 12;
+				if (now.getUTCDate() < then.getUTCDate()) {
+					monthDiff -= 1;
+				}
+			}
+
+			// Day diff = number of days from origin to end of month + current date of month
+			var dayDiff = 0;
+			// If current date is higher than then date, just do current-then
+			// Else do number of days from origin to end of month + current date of month
+			var thenDate = then.getDate();
+			var nowDate = now.getDate();
+			if(nowDate >= thenDate) {
+				dayDiff = nowDate-thenDate-1;
+			} else {
+				dayDiff = (months[then.getMonth()]-thenDate) + nowDate;
+			}
+
 			var simple = "";
 			var full = "";
-			var title = document.getElementById("unixTime").getAttribute("name")
-			
-			var yearDiff = now.getFullYear() - then.getFullYear();
-			var monthDiff = now.getUTCMonth() - then.getUTCMonth();
-			var dayDiff = now.getUTCDate() - then.getUTCDate();
-			var hourDiff = now.getUTCHours() - then.getUTCHours();
-			var minuteDiff = now.getUTCMinutes() - then.getUTCMinutes();
-			var secondDiff = now.getUTCSeconds() - then.getUTCSeconds();
+
 
 			// Figure out full string
 			full = 	yearDiff + " years, " + monthDiff + " months, " + 
 							dayDiff + " days, " + hourDiff + " hours, " + 
-							minuteDiff + " minutes, " + secondDiff + " seconds.";
+							minuteDiff + " minutes, " + secondDiff + " seconds";
 
 			// Figure out simple string - basically get first value that isn't zero, round it.
 			if (yearDiff != 0) {
@@ -66,11 +99,10 @@
 				simple = "Over " + secondDiff + " seconds"
 			}
 
-			document.getElementById("unixTime").innerHTML = `
-				<span>` + title + `</span>
-				<span>` + simple + `</span>
-				<span>`+ full + `</span>
-			`
+			element.innerHTML = `
+				<span>` + title + `:</span>
+				<span>` + simple + ` ago.</span>
+				<span>Exactly `+ full + ` ago.</span>`
 		}
 	</script>
 </html>
