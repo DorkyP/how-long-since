@@ -23,13 +23,13 @@ function updateElement(element) {
 		var then = new Date(time);
 		var now = new Date(Date.now());
 		var short = calculateShortAnswer(then, now);
-		var long = calculateLongAnswer(then, now);
+		var long = "Exactly " + calculateLongAnswer(then, now);
 	}
 
 	element.innerHTML = `
 		<span>` + title + `:</span>
 		<span>` + short + `</span>
-		<span>Exactly `+ long + `</span>`
+		<span>`+ long + `</span>`
 }
 
 function calculateShortAnswer(then, now) {
