@@ -11,11 +11,20 @@ function updateElement(element) {
 	var time = element.getAttribute("value");
 	var title = element.getAttribute("name");
 
-	var then = new Date(time);
-	var now = new Date(Date.now());
+	var short;
+	var long;
 
-	var short = calculateShortAnswer(then, now);
-	var long = calculateLongAnswer(then, now);
+	// If time is blank, event hasn't happened yet.
+	if(!time) {
+		console.log("asdf" + title);
+		short = "Hasn't happened";
+		long = "";
+	} else {
+		var then = new Date(time);
+		var now = new Date(Date.now());
+		var short = calculateShortAnswer(then, now);
+		var long = calculateLongAnswer(then, now);
+	}
 
 	element.innerHTML = `
 		<span>` + title + `:</span>
