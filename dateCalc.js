@@ -16,7 +16,6 @@ function updateElement(element) {
 
 	// If time is blank, event hasn't happened yet.
 	if(!time) {
-		console.log("asdf" + title);
 		short = "Hasn't happened";
 		long = "";
 	} else {
